@@ -5,10 +5,10 @@ Yahoo様主催のOpenHackU2020(2020/8-2020/9)にて作成したAPIです．
 Webアプリケーション制作にて，DBと連携するAPIの制作を担当しました．
 
 ## 使用言語，環境，テクノロジー
-Go
-Goland
-Git,Github
-DBとしてGCPのCloud Firestoreを使用
+- Go
+- Goland
+- Git,Github
+- DBとしてGCPのCloud Firestoreを使用
 
 ## このAPIが使用されている作品の概要説明
 朝早く起床することをサポートするWebアプリです。このアプリでは，起こしてほしい人に対して他の人，つまり起こす人が電話することで，起床を促します。
