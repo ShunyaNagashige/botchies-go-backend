@@ -23,7 +23,7 @@ https://github.com/ShunyaNagashige/botchies-go-backend/blob/master/swagger.yaml
 | /incoming | PATCH | 特定の一人について，その人が目覚めたということをDBに登録する
 
 ## 今後の計画
-・誰でもこのAPIを利用できるようにするために，AWSにデプロイしたい(以前，このAPIをHerokuにデプロイしていました).
-・環境構築にDockerを導入したい．
+- 誰でもこのAPIを利用できるようにするために，AWSにデプロイしたい(以前，このAPIをHerokuにデプロイしていました).
+- 環境構築にDockerを導入したい．
 
-・DBをMySQLにしたい．
+- DBをMySQLにしたい．
