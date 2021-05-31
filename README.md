@@ -14,6 +14,7 @@ DBとしてGCPのCloud Firestoreを使用
 朝早く起床することをサポートするWebアプリです。このアプリでは，起こしてほしい人に対して他の人，つまり起こす人が電話することで，起床を促します。
 
 ## API 一覧
+https://github.com/ShunyaNagashige/botchies-go-backend/blob/master/swagger.yaml
 | Endpoint | Method | 概要
 ----|----|---- 
 | /show_timeline | GET | 現在時刻から15分後以内に目覚まし時刻を設定している人のデータを返す
