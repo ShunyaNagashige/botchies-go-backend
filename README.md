@@ -15,7 +15,7 @@ DBとしてGCPのCloud Firestoreを使用
 
 ## API 一覧
 | Endpoint | Method | 概要
-----|----
+----|----|---- 
 | /show_timeline | GET | 現在時刻から15分後以内に目覚まし時刻を設定している人のデータを返す
 | /reserve | POST |	設定時刻をDBに登録する
 | /check_status/{peer_id} | GET | {peer_id}の人がもう目覚めたか否かを返す
