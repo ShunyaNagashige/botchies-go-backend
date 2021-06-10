@@ -20,7 +20,7 @@ https://github.com/ShunyaNagashige/botchies-go-backend/blob/master/swagger.yaml
 | /show_timeline | GET | 現在時刻から20分後以内に目覚まし時刻を設定している人のデータを返す
 | /reserve | POST |	設定時刻をDBに登録する
 | /check_status/{peer_id} | GET | {peer_id}の人がもう目覚めたか否かを返す
-| /incoming | PATCH | 特定の一人について，その人が目覚めたということをDBに登録する
+| /incoming | POST | 特定の一人について，その人が目覚めたということをDBに登録する
 
 ## 今後の計画
 - 誰でもこのAPIを利用できるようにするために，AWSにデプロイしたい(以前，このAPIをHerokuにデプロイしていました).

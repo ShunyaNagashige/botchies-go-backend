@@ -12,9 +12,11 @@ var PeerCollectionName = "peers"
 
 type Peer struct{
 	PeerID string `json:"peer_id"`
-	//interface{}に注意。
+
+	//interface{}にする．
 	//TimeScheduleは，場合によって文字列で扱いたいときと，time.Timeで扱いたい時があるから。
 	TimeSchedule interface{} `json:"time_schedule"`
+	
 	Comment string `json:"comment"`
 	IsWaiting bool `json:"isWaiting"`
 }

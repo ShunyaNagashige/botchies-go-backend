@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "{app_name}.herokuapp.com"
+host: "https://stormy-taiga-50728.herokuapp.com/"
 
 tags:
 - name: "wakeUpCall"
@@ -98,7 +98,7 @@ paths:
         - "write:shige"
         - "read:shige"
   /incoming:
-    patch:
+    post:
       tags:
       - "wakeUpCall"
       summary: ""

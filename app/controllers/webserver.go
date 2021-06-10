@@ -21,10 +21,6 @@ type JSONError struct {
 
 //API(バックエンド処理)にエラー発生
 func APIError(w http.ResponseWriter, errMessage string, code int) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
 	w.Header().Set("Content-Type", "application/json")
 
 	//レスポンスにエラーコードを含める
@@ -38,15 +34,19 @@ func APIError(w http.ResponseWriter, errMessage string, code int) {
 
 var apiValidPath = regexp.MustCompile("/(reserve|show_timeline|check_status|incoming)")
 
-//HandleFuncの引数
+func allowCORS(w http.ResponseWriter){
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+}
+
+//http.Handlerの生成
 func apiMakeHandler(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := apiValidPath.FindStringSubmatch(r.URL.Path)
 		if len(m) == 0 {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+			allowCORS(w)
 
 			if r.Method=="OPTIONS"{
 				w.WriteHeader(http.StatusOK)
@@ -61,10 +61,7 @@ func apiMakeHandler(fn func(w http.ResponseWriter, r *http.Request)) http.Handle
 
 //タイムラインを表示する
 func showTimelineHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+	allowCORS(w)
 
 	if r.Method=="OPTIONS"{
 		w.WriteHeader(http.StatusOK)
@@ -96,10 +93,7 @@ func showTimelineHandler(w http.ResponseWriter, r *http.Request) {
 
 //予約する(アラームをセットする)
 func reserveHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+	allowCORS(w)
 
 	if r.Method=="OPTIONS"{
 		w.WriteHeader(http.StatusOK)
@@ -116,7 +110,6 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//To allocate slice for request body
 	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -124,6 +117,7 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Read body data to parse json
+	//bodyを読み込む
 	body := make([]byte, length)
 	length, err = r.Body.Read(body)
 	if err != nil && err != io.EOF {
@@ -131,7 +125,7 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//parse json
+	//jsonにパースする
 	var jsonBody map[string]interface{}
 	err = json.Unmarshal(body[:length], &jsonBody)
 	if err != nil {
@@ -149,8 +143,6 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	 */
-
-	//log.Println(r)
 
 	//peerIDの取得
 	peerID := jsonBody["peer_id"]
@@ -170,7 +162,6 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 	timeSchedule = utils.GMTToJST(timeSchedule)
 
 	//コメントの取得
-	//commentは空文字列もあり得る，エラーハンドリングなし
 	comment := jsonBody["comment"]
 
 	Peer := model.NewPeer(peerID.(string), timeSchedule, comment.(string), true)
@@ -188,10 +179,7 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 
 //ステータスの取得
 func checkStatusHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+	allowCORS(w)
 
 	if r.Method=="OPTIONS"{
 		w.WriteHeader(http.StatusOK)
@@ -234,10 +222,7 @@ func checkStatusHandler(w http.ResponseWriter, r *http.Request) {
 //着信を処理する
 //データベースのステータスを，true→falseに書き換える
 func incomingHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
+	allowCORS(w)
 
 	if r.Method=="OPTIONS"{
 		w.WriteHeader(http.StatusOK)
@@ -262,6 +247,7 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Read body data to parse json
+	//bodyの読み込み
 	body := make([]byte, length)
 	length, err = r.Body.Read(body)
 	if err != nil && err != io.EOF {
@@ -270,6 +256,7 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//parse json
+	//jsonにパース
 	var jsonBody map[string]interface{}
 	err = json.Unmarshal(body[:length], &jsonBody)
 	if err != nil {
@@ -290,26 +277,24 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//w.Header().Set("Access-Control-Allow-Origin", "https://mezamashi-jinji.vercel.app")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
-	if r.Method=="OPTIONS"{
-		w.WriteHeader(http.StatusOK)
-		return
-	}
+// func hello(w http.ResponseWriter, r *http.Request) {
+// 	allowCORS(w)
+	
+// 	if r.Method=="OPTIONS"{
+// 		w.WriteHeader(http.StatusOK)
+// 		return
+// 	}
 
-	io.WriteString(w, "Hello, world!")
-}
+// 	io.WriteString(w, "Hello, world!")
+// }
 
 func StartWebServer() error {
 	port := os.Getenv("PORT") //heroku用
-	http.HandleFunc("/",hello)
+	// http.HandleFunc("/",hello)
 	http.HandleFunc("/show_timeline", apiMakeHandler(showTimelineHandler))
 	http.HandleFunc("/reserve", apiMakeHandler(reserveHandler))
 	http.HandleFunc("/check_status", apiMakeHandler(checkStatusHandler))
 	http.HandleFunc("/incoming", apiMakeHandler(incomingHandler))
 	http.ListenAndServe(":"+port, nil) //heroku用
 	return http.ListenAndServe(fmt.Sprintf(":%d", config.Config.Port), nil)
-}
+}	
