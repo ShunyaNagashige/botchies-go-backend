@@ -9,7 +9,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"wakeUpCall/app/database"
+	"wakeUpCall/app/model"
 	"wakeUpCall/config"
 	"wakeUpCall/utils"
 )
@@ -38,8 +38,7 @@ func APIError(w http.ResponseWriter, errMessage string, code int) {
 
 var apiValidPath = regexp.MustCompile("/(reserve|show_timeline|check_status|incoming)")
 
-//HandleFuncの引数によく合います
-//おいしいよ
+//HandleFuncの引数
 func apiMakeHandler(fn func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := apiValidPath.FindStringSubmatch(r.URL.Path)
@@ -78,7 +77,7 @@ func showTimelineHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//ステータスがtrueであるデータを全取得
-	Peers, err := database.GetWaitingPeers()
+	Peers, err := model.GetWaitingPeers()
 	if err != nil {
 		log.Println("action=showTimeline, err=", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -174,7 +173,7 @@ func reserveHandler(w http.ResponseWriter, r *http.Request) {
 	//commentは空文字列もあり得る，エラーハンドリングなし
 	comment := jsonBody["comment"]
 
-	Peer := database.NewPeer(peerID.(string), timeSchedule, comment.(string), true)
+	Peer := model.NewPeer(peerID.(string), timeSchedule, comment.(string), true)
 
 	//データベースに追加(peerID,timeSchedule,comment)
 	err = Peer.Update()
@@ -212,7 +211,7 @@ func checkStatusHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//データベースからステータスを取得
-	isWaitingInterface, err := database.CheckStatus(peerID)
+	isWaitingInterface, err := model.CheckStatus(peerID)
 	isWaiting := isWaitingInterface.(bool)
 	if err != nil {
 		log.Println("action=checkStatus, err=", err)
@@ -278,7 +277,7 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Peer := database.NewPeer(jsonBody["peer_id"].(string), "", "", false)
+	Peer := model.NewPeer(jsonBody["peer_id"].(string), "", "", false)
 
 	//データベースに追加(peerID,timeSchedule,comment)
 	err = Peer.Update()
