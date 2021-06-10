@@ -38,8 +38,6 @@ func (c *Peer)Update()error{
 		return err
 	}
 
-	//c.TimeSchedule = utils.GMTToJST(c.TimeSchedule.(time.Time))
-
 	//データベースに追加
 	_,err = client.Collection(PeerCollectionName).Doc(c.PeerID).Set(ctx,map[string]interface{}{
 		"time_schedule":c.TimeSchedule,
@@ -88,8 +86,9 @@ func GetWaitingPeers()([]*Peer,error){
 		return nil,err
 	}
 
-	//herokuでは，デフォルトのタイムゾーンがPST
-	nowJSTtime:=utils.PSTtoJST(time.Now())
+	// herokuのデフォルトのタイムゾーンがPSTで，それから変更していない場合
+	// 以下のコードを実行する
+	// nowJSTtime:=utils.PSTtoJST(time.Now())
 	
 	//JSTが，現在時刻(JST)から9時間遅れていることを考慮
 	databaseTime:=nowJSTtime.Add(9*time.Hour)
@@ -119,10 +118,6 @@ func GetWaitingPeers()([]*Peer,error){
 		p.PeerID=doc.Ref.ID
 
 		p.TimeSchedule=mapPeer["time_schedule"].(time.Time)
-		//タイムゾーンをUTC→JSTに直す。
-		p.TimeSchedule=utils.UTCtoJST(p.TimeSchedule.(time.Time))
-		//タイムゾーンをJST→MGTに直す
-		p.TimeSchedule=utils.JSTtoGMT(p.TimeSchedule.(time.Time))
 
 		//さらに，time.Time→stringに直す。
 		p.TimeSchedule=utils.TimeToString(p.TimeSchedule.(time.Time))
