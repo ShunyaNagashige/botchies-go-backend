@@ -1,6 +1,5 @@
 # botchies API
 Yahoo様主催のOpenHackU2020(2020/8-2020/9)にて作成したAPIです．
-- URL(一時的に公開): https://stormy-taiga-50728.herokuapp.com/ 
 
 ## ハッカソンでの自分の役割
 Webアプリケーション制作にて，DBと連携するAPIの制作を担当しました．
