@@ -5,7 +5,7 @@ info:
   title: "botchies API"
   contact:
     email: "kasou182537hd@gmail.com"
-host: "stormy-taiga-50728.herokuapp.com"
+host: "{hogehoge}.herokuapp.com"
 
 tags:
 - name: "wakeUpCall"
