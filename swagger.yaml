@@ -3,13 +3,9 @@ info:
   description: "botchies API"
   version: "1.0.0"
   title: "botchies API"
-  termsOfService: "http://swagger.io/terms/"
   contact:
     email: "kasou182537hd@gmail.com"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "{app_name}.herokuapp.com"
+host: "stormy-taiga-50728.herokuapp.com"
 
 tags:
 - name: "wakeUpCall"
@@ -20,29 +16,6 @@ tags:
 schemes:
 - "https"
 paths:
-  /show_timeline:
-    get:
-      tags:
-      - "wakeUpCall"
-      summary: ""
-      description: ""
-      operationId: "show_timeline"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        "200":
-          description: "success. the form of time_schedule is 'hh:mm'."
-          schema:
-            $ref: "#/definitions/Peer"
-        "400":
-          description: "invalid request"
-        "500":
-          description: "server error"
-      security:
-      - petstore_auth:
-        - "write:shige"
-        - "read:shige"
   /reserve:
     post:
       tags:
@@ -68,7 +41,30 @@ paths:
       - petstore_auth:
         - "write:shige"
         - "read:shige"
-  /check_status/{peer_id}:
+  /show_timeline:
+    get:
+      tags:
+      - "wakeUpCall"
+      summary: ""
+      description: ""
+      operationId: "show_timeline"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "success. the form of time_schedule is 'hh:mm'."
+          schema:
+            $ref: "#/definitions/Peer"
+        "400":
+          description: "invalid request"
+        "500":
+          description: "server error"
+      security:
+      - petstore_auth:
+        - "write:shige"
+        - "read:shige"
+  /check_status:
     get:
       tags:
       - "wakeUpCall"
@@ -79,7 +75,7 @@ paths:
       - "application/json"
       parameters:
       - name: "peer_id"
-        in: "path"
+        in: "query"
         description: ""
         required: true
         type: "string"
@@ -98,7 +94,7 @@ paths:
         - "write:shige"
         - "read:shige"
   /incoming:
-    post:
+    patch:
       tags:
       - "wakeUpCall"
       summary: ""

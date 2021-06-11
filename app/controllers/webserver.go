@@ -229,8 +229,8 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method != "POST" {
-		APIError(w, "method is not POST", http.StatusBadRequest)
+	if r.Method != "PATCH" {
+		APIError(w, "method is not PATCH", http.StatusBadRequest)
 		return
 	}
 
@@ -239,7 +239,6 @@ func incomingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//To allocate slice for request body
 	length, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
